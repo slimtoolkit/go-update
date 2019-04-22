@@ -12,7 +12,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/inconshreveable/go-update/internal/osext"
+	"github.com/docker-slim/go-update/internal/osext"
 )
 
 var (
@@ -76,6 +76,11 @@ func Apply(update io.Reader, opts Options) error {
 		return err
 	}
 
+	targetExists := false
+	if _, err := os.Stat(target); err == nil {
+		targetExists = true
+	}
+
 	var newBytes []byte
 	if opts.Patcher != nil {
 		if newBytes, err = opts.applyPatch(update); err != nil {
@@ -134,10 +139,12 @@ func Apply(update io.Reader, opts Options) error {
 	// 2. windows rename operations fail if the destination file already exists
 	_ = os.Remove(oldPath)
 
-	// move the existing executable to a new file in the same directory
-	err = os.Rename(opts.TargetPath, oldPath)
-	if err != nil {
-		return err
+	if targetExists {
+		// move the existing executable to a new file in the same directory
+		err = os.Rename(opts.TargetPath, oldPath)
+		if err != nil {
+			return err
+		}
 	}
 
 	// move the new exectuable in to become the new program
@@ -151,9 +158,11 @@ func Apply(update io.Reader, opts Options) error {
 		// binary to take its place. That means there is no file where the current executable binary
 		// used to be!
 		// Try to rollback by restoring the old binary to its original path.
-		rerr := os.Rename(oldPath, opts.TargetPath)
-		if rerr != nil {
-			return &rollbackErr{err, rerr}
+		if targetExists {
+			rerr := os.Rename(oldPath, opts.TargetPath)
+			if rerr != nil {
+				return &rollbackErr{err, rerr}
+			}
 		}
 
 		return err
