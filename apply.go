@@ -77,7 +77,7 @@ func Apply(update io.Reader, opts Options) error {
 	}
 
 	targetExists := false
-	if _, err := os.Stat(target); err == nil {
+	if _, err := os.Stat(TargetPath); err == nil {
 		targetExists = true
 	}
 
