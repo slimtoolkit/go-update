@@ -12,7 +12,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/slimtoolkit/go-update/internal/binarydist"
+	"github.com/mintoolkit/go-update/internal/binarydist"
 )
 
 var (

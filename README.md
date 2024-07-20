@@ -1,4 +1,4 @@
-# go-update: Build self-updating Go programs [![godoc reference](https://godoc.org/github.com/docker-slim/go-update?status.png)](https://godoc.org/github.com/docker-slim/go-update)
+# go-update: Build self-updating Go programs [![godoc reference](https://godoc.org/github.com/mintoolkit/go-update?status.png)](https://godoc.org/github.com/mintoolkit/go-update)
 
 ## Note
 
@@ -20,7 +20,7 @@ import (
     "fmt"
     "net/http"
 
-    "github.com/docker-slim/go-update"
+    "github.com/mintoolkit/go-update"
 )
 
 func doUpdate(url string) error {
